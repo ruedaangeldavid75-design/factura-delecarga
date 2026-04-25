@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    navigator.serviceWorker.register('service-worker.js')
 
     let modoEdicion = false;
     let numeroActual = parseInt(localStorage.getItem('numeroFactura')) || 1;
