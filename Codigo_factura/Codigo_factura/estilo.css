@@ -1,0 +1,249 @@
+:root {
+    --azul: #0a2242;
+    --naranja: #f26522;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #ccc;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* FACTURA BASE */
+.factura {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm;
+    position: relative;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-main {
+    width: 90px;
+}
+
+.t-mudanzas {
+    color: var(--azul);
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.t-delecarga {
+    color: var(--naranja);
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.slogan {
+    font-size: 8px;
+    color: var(--azul);
+}
+
+/* BLOQUE DOCUMENTO */
+.tipo-doc {
+    background: var(--azul);
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    width: 140px;
+}
+
+.tipo-doc h3 {
+    font-size: 12px;
+}
+
+.tipo-doc p {
+    font-size: 16px;
+    color: var(--naranja);
+}
+
+/* GRID INFO */
+.grid-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 11px;
+}
+
+.info-item {
+    display: flex;
+    gap: 5px;
+}
+
+/* TITULOS */
+.section-title {
+    background: var(--azul);
+    color: white;
+    padding: 4px 8px;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+/* TABLA */
+.tabla-principal {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+}
+
+.tabla-principal th {
+    background: var(--azul);
+    color: white;
+    font-size: 10px;
+    padding: 5px;
+}
+
+.tabla-principal td {
+    border: 1px solid #ccc;
+    font-size: 10px;
+    padding: 6px;
+}
+
+.desc-cell {
+    text-align: left;
+}
+
+/* BLOQUES INFERIORES */
+.flex-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.bloque-pago,
+.bloque-condiciones,
+.firma-box {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-size: 10px;
+}
+
+/* PAGOS */
+.pago-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+/* CLIENTE */
+.cliente-box {
+    margin-top: 10px;
+    border: 1px solid var(--naranja);
+    padding: 8px;
+    font-size: 10px;
+}
+
+/* FIRMA */
+.signature-area {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.signature-area hr {
+    margin: 10px auto;
+    width: 60%;
+}
+
+/* FOOTER */
+.final-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 9px;
+}
+
+.gracias {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* ❌ ELIMINAMOS COMPLETAMENTE LA BARRA INFERIOR */
+.bottom-bar {
+    display: none;
+}
+
+/* ❌ OCULTAR BOTONES */
+.no-print {
+    display: none !important;
+}
+
+/* ========================= */
+/* 🖨️ MODO IMPRESIÓN REAL */
+/* ========================= */
+@media print {
+
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .factura {
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    /* Ajustes extra compactos */
+    .header {
+        margin-bottom: 5px;
+    }
+
+    .section-title {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .tabla-principal th,
+    .tabla-principal td {
+        font-size: 9px;
+        padding: 4px;
+    }
+
+    .flex-row {
+        gap: 5px;
+    }
+
+    .final-footer {
+        font-size: 8px;
+    }
+
+    .gracias {
+        font-size: 12px;
+    }
+}

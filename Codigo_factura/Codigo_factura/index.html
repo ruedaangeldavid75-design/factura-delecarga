@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura DELECARGA</title>
+    <link rel="stylesheet" href="estilo.css">
+    <!-- ✅ PWA para instalar como app -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a2242">
+<link rel="apple-touch-icon" href="img/imagen_logo_delecarga.png">
+</head>
+<body>
+    <div class="controles no-print">
+        <button id="btnEditar" class="btn">✏️ EDITAR</button>
+        <button id="btnImprimir" class="btn imprimir">🖨️ IMPRIMIR</button>
+        <button id="btnLimpiar" class="btn">🔄 LIMPIAR</button>
+    </div>
+
+    <div class="factura" id="factura">
+        <!-- ✅ LÍNEAS SUPERIORES -->
+        <div class="lineas-superiores">
+            <div class="linea-azul"></div>
+            <div class="linea-naranja"></div>
+        </div>
+
+        <header class="header">
+            <div class="header-left">
+                <img src="img/imagen_logo_delecarga.png" alt="Logo" class="logo-main">
+                <div class="brand-text">
+                    <h1 class="t-mudanzas">MUDANZAS</h1>
+                    <h2 class="t-delecarga">DELECARGA</h2>
+                    <div class="divider"></div>
+                    <p class="slogan">CARGAMOS TUS SUEÑOS, ENTREGAMOS CONFIANZA</p>
+                </div>
+            </div>
+            <div class="tipo-doc">
+                <h3>FACTURA DE SERVICIO</h3>
+                <p>No. <span class="editable" data-campo="numero">001</span></p>
+            </div>
+        </header>
+
+        <section class="grid-info">
+            <div class="info-column">
+                <div class="info-item">
+                    <img src="img/fecha_servicio.png" class="icon-circle">
+                    <div>
+                        <label>FECHA DE EMISIÓN</label>
+                        <div class="editable" data-campo="fecha" data-max="20">24/04/2026</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-item">
+                    <img src="img/imagen_circular_recortada_ubicacion_dos.png" class="icon-circle">
+                    <div>
+                        <label>ORIGEN</label>
+                        <div class="editable" data-campo="origen" data-max="35">Bogotá</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-item">
+                    <img src="img/imagen_circular_recortada_ubicacion_tres.png" class="icon-circle">
+                    <div>
+                        <label>DESTINO</label>
+                        <div class="editable" data-campo="destino" data-max="35">Medellín</div>
+                    </div>
+                </div>
+            </div>
+            <img src="img/carro_delecarga.png" class="truck-img">
+        </section>
+
+        <div class="section-title">DETALLE DEL SERVICIO</div>
+        <table class="tabla-principal">
+            <thead>
+                <tr>
+                    <th>DESCRIPCIÓN</th>
+                    <th>ORIGEN</th>
+                    <th>DESTINO</th>
+                    <th>VALOR TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="desc-cell">
+                        <div style="display:flex; align-items:flex-start;">
+                            <img src="img/descripcion_del_servicio.png" class="desc-icon">
+                            <span class="editable" data-campo="desc" data-max="200">
+                                Servicio de mudanza completa de apartamento
+                            </span>
+                        </div>
+                    </td>
+                    <td><span class="editable" data-campo="t-origen" data-max="20">Bogotá DC</span></td>
+                    <td><span class="editable" data-campo="t-destino" data-max="20">Medellín</span></td>
+                    <td><span class="editable monto" data-campo="t-valor" data-type="numeric">$ 0</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="flex-row">
+            <div class="bloque-pago">
+                <div class="section-title">RESUMEN DE PAGO</div>
+                <div class="pago-item">
+                    <img src="img/imagen_circular_recortada_dinero_uno.png" class="icon-sm">
+                    <span>VALOR TOTAL DEL SERVICIO</span>
+                    <div class="editable monto" data-campo="total" data-type="numeric">$ 0</div>
+                </div>
+                <div class="pago-item">
+                    <img src="img/imagen_circular_recortada_dinero_dos.png" class="icon-sm">
+                    <span>ABONO RECIBIDO (50%)</span>
+                    <div class="editable monto" data-campo="abono" data-type="numeric">$ 0</div>
+                </div>
+                <div class="pago-item">
+                    <img src="img/imagen_circular_recortada_dineros.png" class="icon-sm">
+                    <span>SALDO PENDIENTE</span>
+                    <div class="editable monto" data-campo="saldo" data-type="numeric">$ 0</div>
+                </div>
+            </div>
+
+            <div class="bloque-condiciones">
+                <div class="section-title">CONDICIONES</div>
+                <div class="cond-content">
+                    <img src="img/imagen_circular_recortada_estrechomanos.png" class="icon-hand">
+                    <p>El saldo restante deberá ser cancelado contra entrega de la mudanza en el destino acordado.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row footer-data">
+            <div class="cliente-box">
+                <div class="label-orange">DATOS DEL CLIENTE</div>
+                <div class="cliente-content">
+                    <div class="cliente-field">
+                        <img src="img/telefono.png" class="cliente-icon">
+                        <span class="editable" data-campo="c-tel" data-max="10" data-type="phone">3001234567</span>
+                    </div>
+                    <div class="cliente-field">
+                        <img src="img/imagen_circular_recortada_ubicacion_tres.png" class="cliente-icon">
+                        <span class="editable" data-campo="c-dir" data-max="50">Calle 123 #45-67, Medellín</span>
+                    </div>
+                </div>
+            </div>
+            <div class="firma-box">
+                <div class="section-title">FIRMA RESPONSABLE</div>
+                <div class="signature-area">
+                    <hr>
+                    <p>RESPONSABLE</p>
+                    <p class="editable" data-campo="resp">Frank Henrique Osorio</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="final-footer">
+            <div class="contact-info">
+                <img src="img/logo whattaspts.png" class="icon-footer">
+                <div>
+                    <strong>TELÉFONOS DE CONTACTO</strong><br>
+                    311 599 6881 / 313 222 7022
+                </div>
+            </div>
+            <div class="compromiso">
+                <img src="img/imagen_circular_recortada_proteccion.png" class="icon-footer">
+                <div>
+                    <strong>COMPROMISO</strong><br>
+                    Puntualidad, cuidado y seguridad.
+                </div>
+            </div>
+            <div class="gracias">¡Gracias por confiar en nosotros!</div>
+        </footer>
+        <div>CARGAMOS TUS SUEÑOS, ENTREGAMOS CONFIANZA</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
