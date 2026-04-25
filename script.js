@@ -16,19 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         abono: document.querySelector('[data-campo="abono"]'),
         saldo: document.querySelector('[data-campo="saldo"]')
     };
-     const fab = document.getElementById('fabMain');
-
-    if (fab) {
-        fab.addEventListener('click', () => {
-            const opcion = prompt(
-                "Opciones:\n1. Editar\n2. Imprimir\n3. Limpiar"
-            );
-
-            if (opcion === "1") elementos.btnEditar.click();
-            if (opcion === "2") elementos.btnImprimir.click();
-            if (opcion === "3") elementos.btnLimpiar.click();
-        });
-    }
 
     navigator.serviceWorker.register('service-worker.js')
 
