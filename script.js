@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btnEditar: document.getElementById('btnEditar'),
         btnImprimir: document.getElementById('btnImprimir'),
         btnLimpiar: document.getElementById('btnLimpiar'),
+        fabEditar: document.getElementById('fabEditar'),
+        fabImprimir: document.getElementById('fabImprimir'),
+        fabLimpiar: document.getElementById('fabLimpiar'),
         campos: document.querySelectorAll('.editable'),
         numero: document.querySelector('[data-campo="numero"]'),
         fecha: document.querySelector('[data-campo="fecha"]'),
@@ -17,24 +20,30 @@ document.addEventListener('DOMContentLoaded', () => {
         saldo: document.querySelector('[data-campo="saldo"]')
     };
 
-    navigator.serviceWorker.register('service-worker.js')
+    // ✅ PWA - Service Worker mejorado
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(() => console.log('✅ PWA lista para instalar'))
+            .catch(err => console.log('❌ Error SW:', err));
+    }
 
     let modoEdicion = false;
     let numeroActual = parseInt(localStorage.getItem('numeroFactura')) || 1;
+    let touchStartY = 0;
 
-    // 🔧 Funciones utilitarias optimizadas
+    // 🔧 Funciones utilitarias
     const formatearNumero = (num) => '$ ' + parseFloat(num || 0).toLocaleString('es-CO');
     const obtenerNumeroLimpio = (elemento) => parseFloat(elemento?.textContent.replace(/[^\d]/g, '') || 0);
     const truncarTexto = (texto, max) => texto.length > max ? texto.slice(0, max) + '...' : texto;
 
-    // ✅ 1. NÚMEROS CON FORMATO (PUNTOS MIL)
+    // ✅ 1. FORMATO MONETARIO
     function formatearMonto(elemento) {
         if (!elemento) return;
         const valorNumerico = obtenerNumeroLimpio(elemento);
         elemento.textContent = formatearNumero(valorNumerico);
     }
 
-    // ✅ 2. VALIDACIÓN MEJORADA CON LÍMITE 40 CARACTERES
+    // ✅ 2. VALIDACIÓN MEJORADA + TÁCTIL
     function validarInput(event) {
         const el = event.target;
         const tipo = el.getAttribute('data-type');
@@ -61,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
 
-        // Mantener cursor al final
+        // ✅ Cursor al final (mejorado para móvil)
         setTimeout(() => {
             const range = document.createRange();
             const sel = window.getSelection();
@@ -69,23 +78,20 @@ document.addEventListener('DOMContentLoaded', () => {
             range.collapse(false);
             sel.removeAllRanges();
             sel.addRange(range);
-        }, 10);
+        }, 50);
     }
 
-    // ✅ 3. CÁLCULO AUTOMÁTICO OPTIMIZADO
+    // ✅ 3. CÁLCULO AUTOMÁTICO
     function calcularPagos() {
         const valorServicio = obtenerNumeroLimpio(elementos.tValor);
         const abonoRecibido = obtenerNumeroLimpio(elementos.abono);
         
-        // Total = valor del servicio
         if (elementos.total) elementos.total.textContent = formatearNumero(valorServicio);
-        
-        // Saldo = total - abono (mínimo 0)
         const saldo = Math.max(0, valorServicio - abonoRecibido);
         if (elementos.saldo) elementos.saldo.textContent = formatearNumero(saldo);
     }
 
-    // ✅ 4. SINCRONIZACIÓN DE UBICACIONES (40 caracteres máx)
+    // ✅ 4. SINCRONIZACIÓN UBICACIONES
     function sincronizarUbicaciones() {
         const origen = truncarTexto(elementos.origen?.textContent.trim() || '', 20);
         const destino = truncarTexto(elementos.destino?.textContent.trim() || '', 20);
@@ -94,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elementos.tDestino) elementos.tDestino.textContent = destino;
     }
 
-    // ✅ 5. CONFIGURAR FECHA ACTUAL
+    // ✅ 5. FECHA ACTUAL
     function configurarFechaActual() {
         if (!elementos.fecha) return;
         const hoy = new Date();
@@ -103,22 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ✅ 6. ACTUALIZAR NÚMERO DE FACTURA
+    // ✅ 6. NÚMERO FACTURA
     function actualizarNumeroFactura() {
         if (elementos.numero) {
             elementos.numero.textContent = numeroActual.toString().padStart(3, '0');
         }
     }
 
-    // ✅ 7. CONFIGURAR CAMPOS EDITABLES (OPTIMIZADO)
+    // ✅ 7. CAMPOS EDITABLES
     function configurarCamposEditables() {
         elementos.campos.forEach(el => {
             el.contentEditable = modoEdicion;
             if (modoEdicion) {
                 el.addEventListener('input', validarInput);
+                el.style.outline = 'none';
             } else {
                 el.removeEventListener('input', validarInput);
-                // ✅ Formatear montos al salir de edición
                 if (el.classList.contains('monto')) {
                     formatearMonto(el);
                 }
@@ -126,14 +132,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ✅ 8. EVENTOS DE BOTONES
-    elementos.btnEditar.addEventListener('click', () => {
+    // ✅ 8. EVENTOS BOTONES (DESKTOP + MÓVIL)
+    function toggleEdicion() {
         modoEdicion = !modoEdicion;
         
         if (modoEdicion) {
             elementos.factura.classList.add('editando');
             elementos.btnEditar.textContent = '✅ GUARDAR';
-            elementos.btnEditar.className = 'btn btn-editar activo';
+            elementos.fabEditar.textContent = '✅';
             configurarFechaActual();
         } else {
             elementos.factura.classList.remove('editando');
@@ -143,61 +149,103 @@ document.addEventListener('DOMContentLoaded', () => {
             sincronizarUbicaciones();
             calcularPagos();
             elementos.btnEditar.textContent = '✏️ EDITAR';
-            elementos.btnEditar.className = 'btn';
+            elementos.fabEditar.textContent = '✏️';
         }
         
         configurarCamposEditables();
-    });
+    }
 
-    elementos.btnImprimir.addEventListener('click', () => {
-        if (modoEdicion) {
-            alert('⚠️ Guarda los cambios antes de imprimir');
-            return;
-        }
-        window.print();
-    });
+    // Botones desktop
+    if (elementos.btnEditar) {
+        elementos.btnEditar.addEventListener('click', toggleEdicion);
+    }
+    if (elementos.btnImprimir) {
+        elementos.btnImprimir.addEventListener('click', () => {
+            if (modoEdicion) {
+                alert('⚠️ Guarda los cambios antes de imprimir');
+                return;
+            }
+            window.print();
+        });
+    }
+    if (elementos.btnLimpiar) {
+        elementos.btnLimpiar.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de limpiar todos los datos?\nEsta acción no se puede deshacer.')) {
+                limpiarTodo();
+            }
+        });
+    }
 
-    elementos.btnLimpiar.addEventListener('click', () => {
-        if (confirm('¿Estás seguro de limpiar todos los datos?\nEsta acción no se puede deshacer.')) {
-            elementos.campos.forEach(el => {
-                const campo = el.getAttribute('data-campo');
-                switch(campo) {
-                    case 'numero': el.textContent = '001'; break;
-                    case 'fecha': configurarFechaActual(); break;
-                    case 't-valor':
-                    case 'total':
-                    case 'abono':
-                    case 'saldo': el.textContent = '$ 0'; break;
-                    default: el.textContent = '';
-                }
-            });
-            
-            numeroActual = 1;
-            localStorage.setItem('numeroFactura', numeroActual);
-            actualizarNumeroFactura();
-            sincronizarUbicaciones();
-            calcularPagos();
-        }
-    });
+    // ✅ FAB Botones MÓVIL
+    if (elementos.fabEditar) {
+        elementos.fabEditar.addEventListener('click', toggleEdicion);
+    }
+    if (elementos.fabImprimir) {
+        elementos.fabImprimir.addEventListener('click', () => {
+            if (modoEdicion) {
+                alert('⚠️ Guarda los cambios antes de imprimir');
+                return;
+            }
+            window.print();
+        });
+    }
+    if (elementos.fabLimpiar) {
+        elementos.fabLimpiar.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de limpiar todos los datos?\nEsta acción no se puede deshacer.')) {
+                limpiarTodo();
+            }
+        });
+    }
 
-    // ✅ 9. INICIALIZACIÓN OPTIMIZADA
-    actualizarNumeroFactura();
-    configurarFechaActual();
-    sincronizarUbicaciones();
-    calcularPagos();
-    configurarCamposEditables();
+    // ✅ 9. LIMPIAR TODO
+    function limpiarTodo() {
+        elementos.campos.forEach(el => {
+            const campo = el.getAttribute('data-campo');
+            switch(campo) {
+                case 'numero': el.textContent = '001'; break;
+                case 'fecha': configurarFechaActual(); break;
+                case 't-valor':
+                case 'total':
+                case 'abono':
+                case 'saldo': el.textContent = '$ 0'; break;
+                default: el.textContent = '';
+            }
+        });
+        
+        numeroActual = 1;
+        localStorage.setItem('numeroFactura', numeroActual);
+        actualizarNumeroFactura();
+        sincronizarUbicaciones();
+        calcularPagos();
+    }
 
-    // ✅ 10. PREVENIR ENTER EN CAMPOS NUMÉRICOS
+    // ✅ 10. EVENTOS TÁCTILES MEJORADOS
     document.addEventListener('keydown', (e) => {
         if (modoEdicion && e.target.classList.contains('editable') && 
             e.target.getAttribute('data-type') === 'numeric' && e.key === 'Enter') {
             e.preventDefault();
         }
     });
+
+    // ✅ Prevenir zoom en inputs numéricos (iOS)
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchDistance = touchStartY - touchEndY;
+        
+        // Si es un swipe hacia arriba en campo editable, guardar
+        if (modoEdicion && Math.abs(touchDistance) > 50 && touchDistance > 0) {
+            toggleEdicion();
+        }
+    }, { passive: true });
+
+    // ✅ INICIALIZACIÓN
+    actualizarNumeroFactura();
+    configurarFechaActual();
+    sincronizarUbicaciones();
+    calcularPagos();
+    configurarCamposEditables();
 });
-// ✅ PWA - Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log('✅ App lista para instalar'))
-    .catch(err => console.log('❌ Error SW:', err));
-}
