@@ -693,3 +693,89 @@ body {
         max-width: none !important;
     }
 }
+ /* ✅ BOTONES GIGANTES SIEMPRE VISIBLES */
+        .controles-movil {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 9999;
+            padding: 10px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .btn-movil {
+            width: 70px !important;
+            height: 70px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            font-size: 24px !important;
+            font-weight: bold !important;
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .btn-movil:active { transform: scale(0.95) !important; }
+
+        .btn-editar { background: linear-gradient(135deg, var(--azul), #1a3a5e) !important; }
+        .btn-imprimir { background: linear-gradient(135deg, var(--naranja), #ff8c42) !important; }
+        .btn-limpiar { background: linear-gradient(135deg, #666, #999) !important; }
+
+        /* ✅ FACTURA RESPONSIVE */
+        .factura { 
+            background: white; 
+            width: 100%; 
+            max-width: 800px; 
+            min-height: 100vh;
+            margin: 0 auto 100px auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ✅ ESTILOS BÁSICOS DE TU FACTURA */
+        .header { display: flex; justify-content: space-between; padding: 20px; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .logo-main { width: 80px; }
+        .t-mudanzas { color: var(--azul); font-size: 22px; font-weight: 900; }
+        .t-delecarga { color: var(--naranja); font-size: 26px; font-weight: 900; }
+        .tipo-doc { background: var(--azul); color: white; padding: 10px; border-radius: 8px; text-align: center; }
+
+        .editable {
+            background: transparent;
+            border: none;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        .editando .editable {
+            background: #fffde7 !important;
+            border: 3px solid var(--naranja) !important;
+            border-radius: 6px !important;
+            padding: 4px 8px !important;
+            font-size: 16px !important;
+        }
+
+        .monto { font-weight: bold; color: var(--azul); }
+
+        /* ✅ MÓVIL */
+        @media (max-width: 768px) {
+            .factura { border-radius: 0; margin-bottom: 120px; min-height: 100vh; }
+            .header { flex-direction: column; text-align: center; gap: 12px; }
+        }
+
+        /* ✅ IMPRIMIR */
+        @media print {
+            .controles-movil { display: none !important; }
+            .factura { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; width: 100% !important; }
+        }
