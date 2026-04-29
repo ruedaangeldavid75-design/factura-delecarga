@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         saldo: document.querySelector('[data-campo="saldo"]')
     };
 
+    navigator.serviceWorker.register('service-worker.js')
+
     let modoEdicion = false;
     let numeroActual = parseInt(localStorage.getItem('numeroFactura')) || 1;
 
@@ -193,3 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+// ✅ PWA - Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('✅ App lista para instalar'))
+    .catch(err => console.log('❌ Error SW:', err));
+}
